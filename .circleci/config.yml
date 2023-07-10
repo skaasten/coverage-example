@@ -18,8 +18,13 @@ jobs:
       - run:
           name: Run tests
           command: gotestsum --junitfile junit.xml -- -coverprofile=cover.out ./...
+      - run:
+          name: Save html coverage
+          command: go tool cover -html=cover.out -o cover.html
       - store_test_results:
           path: junit.xml
+      - store_artifacts:
+          path: cover.html
 workflows:
   test:
     jobs:
