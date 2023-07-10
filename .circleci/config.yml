@@ -18,6 +18,12 @@ jobs:
       - run:
           name: Run tests
           command: go list ./... | circleci tests run --timings-type "name" --command "xargs gotestsum --junitfile junit.xml --format testname -- -coverprofile=cover.out"
+      - restore_cache:
+          key: coverage-{{.Revision}}
+      - save_cache:
+          key: coverage-{{.Revision}}
+          paths:
+            - cover.out
       - run:
           name: Save html coverage
           command: go tool cover -html=cover.out -o cover.html
