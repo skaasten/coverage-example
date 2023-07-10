@@ -7,17 +7,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: go-mod-{{ checksum "go.sum" }}
+          key: go-mod-{{ checksum "go.mod" }}
       - run:
           name: Download Go modules
           command: go mod download
       - save_cache:
-          key: go-mod-{{ checksum "go.sum" }}
+          key: go-mod-{{ checksum "go.mod" }}
           paths:
             - /home/circleci/go/pkg/mod
       - run:
           name: Run tests
-          command: gotestsum --junitfile junit.xml -- -coverprofile=cover.out ./...
+          command: go list ./... | circleci tests run --command "xargs gotestsum --junitfile junit.xml --format testname -- -coverprofile=cover.out"
       - run:
           name: Save html coverage
           command: go tool cover -html=cover.out -o cover.html
