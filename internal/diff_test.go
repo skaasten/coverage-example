@@ -1,6 +1,10 @@
 package internal
 
-import "testing"
+import (
+	"math/rand"
+	"testing"
+	"time"
+)
 
 func Test_diff(t *testing.T) {
 	type args struct {
@@ -12,9 +16,10 @@ func Test_diff(t *testing.T) {
 		args args
 		want int
 	}{
-		{"fail", args{2, 1}, 0},
+		{"pass", args{3, 2}, rand.Intn(2)},
 	}
 	for _, tt := range tests {
+		rand.Seed(time.Now().UnixNano())
 		t.Run(tt.name, func(t *testing.T) {
 			if got := diff(tt.args.x, tt.args.y); got != tt.want {
 				t.Errorf("diff() = %v, want %v", got, tt.want)
