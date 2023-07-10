@@ -17,7 +17,7 @@ jobs:
             - /home/circleci/go/pkg/mod
       - run:
           name: Run tests
-          command: go list ./... | circleci tests run --command "xargs gotestsum --junitfile junit.xml --format testname -- -coverprofile=cover.out"
+          command: go list ./... | circleci tests run --timings-type "name" --command "xargs gotestsum --junitfile junit.xml --format testname -- -coverprofile=cover.out"
       - run:
           name: Save html coverage
           command: go tool cover -html=cover.out -o cover.html
