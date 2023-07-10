@@ -12,7 +12,7 @@ func Test_diff(t *testing.T) {
 		args args
 		want int
 	}{
-		{"pass", args{2, 1}, 1},
+		{"fail", args{2, 1}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
