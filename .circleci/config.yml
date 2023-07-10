@@ -27,10 +27,13 @@ jobs:
       - run:
           name: Save html coverage
           command: go tool cover -html=cover.out -o cover.html
+          when: always
       - store_test_results:
           path: junit.xml
+          when: always
       - store_artifacts:
           path: cover.html
+          when: always
 workflows:
   test:
     jobs:
