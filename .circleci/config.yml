@@ -19,15 +19,15 @@ jobs:
       - run:
           name: Run tests with coverage being saved
           command: go list ./... | circleci tests run --timings-type "name" --command "xargs gotestsum --junitfile junit.xml --format testname -- -coverprofile=cover.out"
-      # For a rerun, restore the coverage files from the inital run 
+      # For a rerun that succeeds, restore the coverage files from the failed run 
       - restore_cache:
           key: coverage-{{.Revision}}
-      # Save the coverage, even for failed build, when it hasn't already been saved (circleci will not save over same revision key)
+      # For a failed run, save the coverage for rerunning failed tests. CircleCI will skip saving if this revision key has already been saved.
       - save_cache:
           key: coverage-{{.Revision}}
           paths:
             - cover.out
-          when: always
+          when: on_fail
       # Needed for to rerun failed tests
       - store_test_results:
           path: junit.xml
