@@ -6,6 +6,7 @@ jobs:
       - image: cimg/go:1.20
     steps:
       - checkout
+      # Cache dependencies
       - restore_cache:
           key: go-mod-{{ checksum "go.mod" }}
       - run:
@@ -16,20 +17,25 @@ jobs:
           paths:
             - /home/circleci/go/pkg/mod
       - run:
-          name: Run tests
+          name: Run tests with coverage being saved
           command: go list ./... | circleci tests run --timings-type "name" --command "xargs gotestsum --junitfile junit.xml --format testname -- -coverprofile=cover.out"
+      # For a rerun, restore the coverage files from the inital run 
       - restore_cache:
           key: coverage-{{.Revision}}
+      # Save the coverage, even for failed build, when it hasn't already been saved (circleci will not save over same revision key)
       - save_cache:
           key: coverage-{{.Revision}}
           paths:
             - cover.out
+          when: always
+      # Needed for to rerun failed tests
+      - store_test_results:
+          path: junit.xml
+          when: always
+      # Upload coverage file html so we can show it includes all the tests (not just rerun)
       - run:
           name: Save html coverage
           command: go tool cover -html=cover.out -o cover.html
-          when: always
-      - store_test_results:
-          path: junit.xml
           when: always
       - store_artifacts:
           path: cover.html
