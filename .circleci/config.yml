@@ -4,6 +4,7 @@ jobs:
     # Install go modules and run tests
     docker:
       - image: cimg/go:1.20
+    parallelism: 2
     steps:
       - checkout
       # Cache dependencies
