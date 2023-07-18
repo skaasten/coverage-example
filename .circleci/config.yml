@@ -29,10 +29,6 @@ jobs:
           paths:
             - cover.out
           when: always
-      # Needed for to rerun failed tests
-      - store_test_results:
-          path: junit.xml
-          when: always
       # Upload coverage file html so we can show it includes all the tests (not just rerun)
       - run:
           name: Save html coverage
